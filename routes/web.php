@@ -38,4 +38,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+//Route::any('test', [\App\Http\Controllers\PostController::class, 'filesResults'])->name('get.files');
+
 require __DIR__ . '/auth.php';
