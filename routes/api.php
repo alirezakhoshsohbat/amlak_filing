@@ -11,6 +11,7 @@ Route::group(['prefix' => 'v1'], function () {
         Route::post('me', [\App\Http\Controllers\AuthController::class, 'me']);
     });
     Route::post('files', [FileController::class , 'index']);
+    Route::post('create', [FileController::class , 'create']);
 });
 
 

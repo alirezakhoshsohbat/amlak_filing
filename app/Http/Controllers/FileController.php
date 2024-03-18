@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +14,6 @@ class FileController extends Controller
 
     public function index()
     {
-
         if (\auth('api')->check()) {
             $user = \auth('api')->user();
             $files = $user->posts;
@@ -45,13 +45,30 @@ class FileController extends Controller
     }
 
 
+
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        if (!auth('api')->check()) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $validatedData = $this->validate(request(), [
+            'title' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string', 'max:1000'],
+        ]);
+        $validatedData = array_merge($validatedData, ['creator' => \auth('api')->id()]);
+        try {
+            $post = Post::create($validatedData);
+            return response()->json($post, 201);
+        } catch (\Exception $e) {
+            return response()->json(['message' => '$e'], 500);
+        }
     }
+
 
     /**
      * Store a newly created resource in storage.
